@@ -36,9 +36,9 @@ It is not just a review — it's a **reconstruction**.
 Because true understanding comes from **reconstruction**.
 By rewriting the formal proofs, I aim to:
 
-* Deepen my structural understanding of Lean
-* Internalize the philosophy of type theory
-* Prepare for advanced formalization projects in pure mathematics
+- Deepen my structural understanding of Lean
+- Internalize the philosophy of type theory
+- Prepare for advanced formalization projects in pure mathematics
 
 ---
 
@@ -46,4 +46,3 @@ By rewriting the formal proofs, I aim to:
 
 Feel free to **clone**, **fork**, **study**, or **challenge** the proofs.
 I welcome feedback, corrections, or collaborations — especially if you're also walking the Lean path.
-
