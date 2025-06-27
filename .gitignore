@@ -1,0 +1,11 @@
+# Lean build artifacts
+build/
+.lake/
+
+# IDE files
+.vscode/settings.json
+*.olean
+
+# OS files
+.DS_Store
+Thumbs.db
