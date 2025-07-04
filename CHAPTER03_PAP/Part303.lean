@@ -50,3 +50,47 @@ example (h : p ∨ q) : q ∨ p :=
     Or.elim h (fun hp => Or.inr hp) (fun hq => Or.inl hq)
 example (h : p ∨ q) : q ∨ p :=
     h.elim (fun hp => Or.inr hp) (fun hq => Or.inl hq)
+
+/-3.3.3 Negation and Falsity-/
+variable (p q : Prop)
+example (hpq : p → q) (hnq : ¬ q) : ¬ p :=
+    fun hp : p =>
+    show False from hnq (hpq hp)
+/-这行代码在证明一个逻辑定理：
+如果同时有 p 和 ¬p（非p），那么可以推出任何结论 q。-/
+example (hp : p) (hnp : ¬ p) : q :=
+    False.elim (hnp hp)
+/-下面这行代码和前面那行在做完全相同的事情，只是用了不同的方法！
+absurd 是 Lean 中的一个内置函数
+它接受两个参数：一个命题的证明 (hp) 和这个命题否定的证明 (hnp)
+直接识别出这是矛盾，从矛盾可以推出任何结论-/
+example (hp : p) (hnp : ¬ p) : q :=
+    absurd hp hnp
+/-这里 hqp hq 返回p 和hnp矛盾，可以直接使用absurd-/
+example (hnp : ¬ p) (hq : q) (hqp : q → p) : r :=
+    absurd (hqp hq) hnp
+/-3.3.4 Logical Equivalence-/
+theorem and_swap : p ∧ q ↔ q ∧ p :=
+    Iff.intro
+    (fun h : p ∧ q =>
+    show q ∧ p from And.intro (And.right h) (And.left h))
+    (fun h : q ∧ p =>
+    show p ∧ q from And.intro (And.right h) (And.left h))
+
+#check and_swap p q
+#check Iff.mp (and_swap p q)
+-- Iff.mp的作用是将一个 Iff 从左到右提取之后应用到一个证明上
+variable (h : p ∧ q)
+-- 这是在说："假设我们有一个变量h，它是p∧q的证明"
+example : q ∧ p := Iff.mp (and_swap p q) h
+/-下面是利用语法糖构造的更简单的写法，这里Lean会自动推断你要构造什么类型-/
+variable (p q: Prop)
+theorem and_swap' : p ∧ q ↔ q ∧ p :=
+    ⟨ fun h => ⟨h.right, h.left⟩, fun h => ⟨h.right, h.left⟩⟩
+example (h : p ∧ q) : q ∧ p :=
+    (and_swap' p q).mp h
+
+variable (p q r : Prop)
+theorem assoc_example : (p ∧ q) ∧ r ↔ p ∧ (q ∧ r) :=
+    ⟨ fun h => ⟨h.left.left, ⟨h.left.right, h.right⟩⟩,
+      fun h => ⟨⟨h.left, h.right.left⟩, h.right.right⟩⟩
