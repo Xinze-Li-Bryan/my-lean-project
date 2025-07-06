@@ -4,7 +4,6 @@ open Classical
 variable (p q r : Prop)
 -- em 是 "excluded middle"（排中律） 的缩写
 -- 所谓“排中律” 对于任何陈述，要么它是真的，要么它是假的，没有中间状态
-#check em p
 -- 这个定理的意思是：如果 p 的否定的否定是成立的，那么 p 也是成立的
 -- 这就是经典逻辑中的双重否定
 theorem dne {p : Prop} (h : ¬¬ p) : p :=
@@ -66,3 +65,17 @@ example (h : ¬ (p ∧ q)) : ¬ p ∨ ¬ q :=
 -- 结论： 用 Or.inr 和 Or.inl 来分别处理两种情况
 -- Or.inr 表示 "如果 p 成立，那么 ¬ q 成立"
 -- Or.inl 表示 "如果 ¬ p 成立，那么 ¬ q 成立
+
+example (h : ¬ (p ∧ q)) : ¬ p ∨ ¬ q :=
+  byCases
+    (fun hp : p =>
+      Or.inr
+        (show ¬ q from fun hq : q => absurd ⟨hp, hq⟩ h))
+    (fun hp : ¬ p => Or.inl hp)
+
+example (h : ¬ (p ∧ q)) : ¬ p ∨ ¬ q :=
+  byContradiction (fun h1 : ¬(¬p ∨ ¬q) =>
+    show False from h ⟨
+      Classical.byContradiction (fun hnp => h1 (Or.inl hnp)),
+      Classical.byContradiction (fun hnq => h1 (Or.inr hnq))
+    ⟩)
